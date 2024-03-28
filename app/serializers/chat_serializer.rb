@@ -5,8 +5,9 @@ class ChatSerializer
 
   def json
     {
-      id: @chat.id,
-      name: @chat.name
+      name: @chat.name,
+      messages_count: @chat.messages_count,
+      number: @chat.number
     }
   end
 end

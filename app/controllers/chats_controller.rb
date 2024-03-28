@@ -3,14 +3,18 @@ class ChatsController < ApplicationController
 
   # GET /chats/1
   def show
-    render json: ChatSerializer.new(@chat).json
+    if @chat.nil?
+      render json: {}, status: :not_found
+    else
+      render json: ChatSerializer.new(@chat).json
+    end
   end
 
   # POST /chats
   def create
     @application = Application.find(params[:application_id])
-    @chat = @application.chats.create(name: params[:name])
-    # render json: @application
+    number = Redis.incr(params[:application_id])
+    @chat = @application.chats.create(name: params[:name], number: number)
     if @chat.save
       render json: ChatSerializer.new(@chat).json, status: :created
     else
@@ -35,7 +39,7 @@ class ChatsController < ApplicationController
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_chat
-      @chat = Chat.where(application_id: params[:application_id],id: params[:id]).last
+      @chat = Chat.where(application_id: params[:application_id],number: params[:id]).lock!.last
     end
 
     # Only allow a list of trusted parameters through.

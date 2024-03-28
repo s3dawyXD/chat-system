@@ -3,7 +3,11 @@ class ApplicationsController < ApplicationController
 
   # GET /applications/1
   def show
+    if @application.nil?
+      render json: {}, status: :not_found
+    else
     render json: ApplicationSerializer.new(@application).json
+    end
   end
 
   # POST /applications
