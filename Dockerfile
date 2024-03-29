@@ -7,7 +7,8 @@ FROM base as build
 
 COPY . /app
 WORKDIR /app
-RUN apt-get update -qq && apt-get install -y build-essential libpq-dev default-libmysqlclient-dev
+RUN apt-get update -qq && apt-get install -y build-essential libpq-dev default-libmysqlclient-dev cron
 RUN bundle install 
 RUN bundle exec bootsnap precompile app/ lib/
+RUN bundle exec whenever --update-crontab
 

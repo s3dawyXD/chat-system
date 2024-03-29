@@ -1,6 +1,15 @@
 class ApplicationsController < ApplicationController
   before_action :set_application, only: %i[ show update destroy ]
 
+  def index
+    @applications = Application.all
+    if @applications.blank?
+      render json: []
+    else
+      render json: ApplicationSerializer.new(@applications).json
+    end
+  end
+
   # GET /applications/1
   def show
     if @application.nil?

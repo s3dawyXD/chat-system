@@ -6,8 +6,8 @@ module Searchable
     include Elasticsearch::Model::Callbacks
 
     mappings do
-      indexes :title, type: 'text'
-      indexes :content, type: 'text'
+      indexes :id, type: 'integer'
+      indexes :body, type: 'text'
     end
 
     def self.search(query)
@@ -15,7 +15,7 @@ module Searchable
         query: {
           multi_match: {
             query: query,
-            fields: ['title', 'content'],
+            fields: ['id', 'body'],
             fuzziness: "AUTO"
           }
         }

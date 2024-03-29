@@ -8,10 +8,23 @@ class ApplicationSerializer
   end
 
   def json
-    {
-      token: @application.id,
-      name: @application.name,
-      chats_count: @application.chats_count
-    }
+    if @application.respond_to?('map')
+      result = @application.map { |obj| {
+        token: obj.id,
+        name: obj.name,
+        chats_count: obj.chats_count
+      } }
+    else
+      result = {
+        token: @application.id,
+        name: @application.name,
+        chats_count: @application.chats_count
+      }
+    end
+
+    return result
+
   end
+
+
 end
