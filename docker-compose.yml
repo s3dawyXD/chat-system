@@ -43,11 +43,18 @@ services:
     expose:
       - 6379
   elasticsearch:
-    # image: elasticsearch:7.17.18
+    container_name: elasticsearch
     image: docker.elastic.co/elasticsearch/elasticsearch:7.17.18
     restart: always
-    container_name: elasticsearch
     volumes:
       - dbsql:/var/lib/elasticsearch
     expose:
       - 9200
+    environment: 
+      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+      - discovery.type=single-node
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1

@@ -57,10 +57,11 @@ class MessagesController < ApplicationController
   end
 
   def search
-    Message.joins(chat: :application)
-    .where(applications: { id: params[:application_id] },
-           chats: { number: params[:chat_id] }).search(params[:q])
-    render json: {message: "you are great"}
+    # Message.joins(chat: :application)
+    # .where(applications: { id: params[:application_id] },
+    #        chats: { number: params[:chat_id] }).search(params[:q])
+    @messages = Message.search(query: params[:q])
+    render json: @messages
   end
 
   private

@@ -6,7 +6,7 @@ module Searchable
     include Elasticsearch::Model::Callbacks
 
     mappings do
-      indexes :id, type: 'integer'
+      indexes :chat_id, type: 'keyword'
       indexes :body, type: 'text'
     end
 
@@ -15,12 +15,11 @@ module Searchable
         query: {
           multi_match: {
             query: query,
-            fields: ['id', 'body'],
+            fields: ['body'],
             fuzziness: "AUTO"
-          }
+        }
         }
       }
-
       self.__elasticsearch__.search(params).records.to_a
     end
   end
