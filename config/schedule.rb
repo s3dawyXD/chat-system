@@ -18,7 +18,9 @@
 # end
 
 # Learn more: http://github.com/javan/whenever
+env :PATH, ENV['PATH']
+set :output, {:error => '/app/log/cron_error.log', :standard => '/app/log/cron_status.log'}
 
-every 5.minutes do
-  runner 'UpdateCounts.update'
+every 1.minute do
+  rake 'batch:update_counts', :environment => 'development'
 end
