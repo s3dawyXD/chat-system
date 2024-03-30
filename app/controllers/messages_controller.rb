@@ -57,11 +57,13 @@ class MessagesController < ApplicationController
   end
 
   def search
-    # Message.joins(chat: :application)
-    # .where(applications: { id: params[:application_id] },
-    #        chats: { number: params[:chat_id] }).search(params[:q])
-    @messages = Message.search(query: params[:q])
-    render json: @messages
+    chat = Chat.where(application_id: params[:application_id],number: params[:chat_id]).last
+    if chat.nil?
+      render json: {message:"not found"}, status: :not_found
+    else
+    messages = Message.search(params[:q], chat.id)
+    render json: MessageSerializer.new(messages).json
+    end
   end
 
   private

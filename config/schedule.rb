@@ -21,6 +21,6 @@
 env :PATH, ENV['PATH']
 set :output, {:error => '/app/log/cron_error.log', :standard => '/app/log/cron_status.log'}
 
-every 1.minute do
+every 1.hour do
   rake 'batch:update_counts', :environment => 'development'
 end

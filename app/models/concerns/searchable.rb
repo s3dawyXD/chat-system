@@ -10,17 +10,29 @@ module Searchable
       indexes :body, type: 'text'
     end
 
-    def self.search(query)
+    def self.search(query, chat_id)
       params = {
         query: {
-          multi_match: {
-            query: query,
-            fields: ['body'],
-            fuzziness: "AUTO"
-        }
+          bool: {
+            must: [
+              {
+                match: {
+                  body:{
+                  query: query,
+                  fuzziness: 'AUTO'
+                  }
+                }
+              },
+              {
+                term: {
+                  chat_id: chat_id
+                }
+              }
+            ]
+          }
         }
       }
-      self.__elasticsearch__.search(params).records.to_a
+      __elasticsearch__.search(params).records.to_a
     end
   end
 end
